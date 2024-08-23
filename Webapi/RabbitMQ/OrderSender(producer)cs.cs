@@ -18,12 +18,7 @@ public class OrderSender
         using (var channel = connection.CreateModel())
         {
             channel.ExchangeDeclare("Order_logs", ExchangeType.Fanout);
-            /*channel.QueueDeclare(queue: "order_queue",
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
-            */
+            
 
             string message = System.Text.Json.JsonSerializer.Serialize(order);
             var body = Encoding.UTF8.GetBytes(message);

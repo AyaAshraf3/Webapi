@@ -22,17 +22,24 @@ namespace UI
         private async void InitializeSignalR()
         {
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:7254/orderHub")
+                .WithUrl("http://localhost:5000/orderHub")
                 .Build();
-
+            
             await StartConnectionAsync();
 
-            _hubConnection.On("ReceiveOrderUpdate", async () =>
+            
+            _hubConnection.On<Submit>("ReceiveOrderUpdate", newOrder =>
             {
-                await LoadOrdersAsync(); // This should refresh the grid with new data  
+                dataGridView1.Invoke((Action)(() =>
+                {
+                    var dataSource = dataGridView1.DataSource as List<Submit>;
+                    dataSource.Add(newOrder); // Add the new order
+                    dataGridView1.DataSource = null; // Refresh the DataGridView
+                    dataGridView1.DataSource = dataSource;
+                }));
             });
 
-          
+
         }
 
 
@@ -96,6 +103,12 @@ namespace UI
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form1 orderform = new Form1();
+            orderform.Show();
         }
     }
 }

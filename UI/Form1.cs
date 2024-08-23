@@ -16,6 +16,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Net.Http.Formatting;
 using Microsoft.AspNetCore.SignalR.Client;
+using static UI.Form2;
 
 
 namespace UI
@@ -27,17 +28,17 @@ namespace UI
         public class Submit
         {
             public Guid Clordid { get; set; }
-            public string Name { get; set; }
+            public string Username { get; set; }
             public int Qty { get; set; }
             public decimal Px { get; set; }
             public string Dir { get; set; }
         }
+
         public Form1()
         {
             InitializeComponent();
             
         }
-
         
 
         private async void button1_Click(object sender, EventArgs e)
@@ -47,19 +48,19 @@ namespace UI
 
             try
             {
-                errorProvider1.SetError(textBox1, "");
+                
                 errorProvider1.SetError(textBox2, "");
                 errorProvider1.SetError(textBox3, "");
                 errorProvider1.SetError(textBox4, "");
 
-                if (textBox1.Text.ToString().Trim() != "" && textBox2.Text.ToString().Trim() != "" && textBox3.Text.ToString().Trim() != "" && textBox4.Text.ToString().Trim() != "")
+                if ( textBox2.Text.ToString().Trim() != "" && textBox3.Text.ToString().Trim() != "" && textBox4.Text.ToString().Trim() != "")
                 {
                     using (var client = new HttpClient())
                     {
                         client.BaseAddress = new Uri("https://localhost:7254");
                         Submit sbmt = new Submit
                         {
-                            Name = textBox1.Text.ToString(),
+                            Username = Form2.entered_username,
                             Qty = Convert.ToInt32(textBox2.Text),
                             Px = Convert.ToDecimal(textBox3.Text),
                             Dir = textBox4.Text.ToString()
@@ -76,20 +77,18 @@ namespace UI
                         else
                         {
                             MessageBox.Show("Submit successfully.");
-                            textBox1.Text = "";
+                            
                             textBox2.Text = "";
                             textBox3.Text = "";
                             textBox4.Text = "";
+
+                            this.Close();
                         }
                     }
                 }
-                else if (textBox1.Text.ToString().Trim() == "" && textBox2.Text.ToString().Trim() == "" && textBox3.Text.ToString().Trim() == "" && textBox4.Text.ToString().Trim() == "")
+                else if ( textBox2.Text.ToString().Trim() == "" && textBox3.Text.ToString().Trim() == "" && textBox4.Text.ToString().Trim() == "")
                 {
-                    errorProvider1.SetError(textBox1, "Please enter the following information");
-                }
-                else if (textBox1.Text.ToString().Trim() == "")
-                {
-                    errorProvider1.SetError(textBox1, "Please enter the user Name");
+                    errorProvider1.SetError(textBox2, "Please enter the following information");
                 }
                 else if (textBox2.Text.ToString().Trim() == "")
                 {
@@ -158,20 +157,5 @@ namespace UI
 
 
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            GridViewForm gridViewForm = new GridViewForm();
-            gridViewForm.Show();
-        }
     }
 }

@@ -29,29 +29,17 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            label1 = new Label();
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
-            textBox1 = new TextBox();
             textBox2 = new TextBox();
             textBox3 = new TextBox();
             textBox4 = new TextBox();
             button1 = new Button();
             errorProvider1 = new ErrorProvider(components);
-            button2 = new Button();
+            label1 = new Label();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             SuspendLayout();
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(83, 36);
-            label1.Name = "label1";
-            label1.Size = new Size(49, 20);
-            label1.TabIndex = 0;
-            label1.Text = "Name";
-            label1.Click += label1_Click;
             // 
             // label2
             // 
@@ -80,14 +68,6 @@
             label4.Size = new Size(70, 20);
             label4.TabIndex = 3;
             label4.Text = "Direction";
-            // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(228, 29);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(330, 27);
-            textBox1.TabIndex = 5;
-            textBox1.TextChanged += textBox1_TextChanged;
             // 
             // textBox2
             // 
@@ -127,33 +107,31 @@
             // 
             errorProvider1.ContainerControl = this;
             // 
-            // button2
+            // label1
             // 
-            button2.Location = new Point(432, 268);
-            button2.Name = "button2";
-            button2.Size = new Size(114, 45);
-            button2.TabIndex = 11;
-            button2.Text = "Details";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            label1.AutoSize = true;
+            label1.Font = new Font("Segoe UI", 12F, FontStyle.Bold | FontStyle.Italic | FontStyle.Underline);
+            label1.Location = new Point(30, 28);
+            label1.Name = "label1";
+            label1.Size = new Size(313, 28);
+            label1.TabIndex = 11;
+            label1.Text = "Enter the following information";
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(749, 353);
-            Controls.Add(button2);
+            Controls.Add(label1);
             Controls.Add(button1);
             Controls.Add(textBox4);
             Controls.Add(textBox3);
             Controls.Add(textBox2);
-            Controls.Add(textBox1);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
-            Controls.Add(label1);
             Name = "Form1";
-            Text = "Form1";
+            Text = "Order Form";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ResumeLayout(false);
@@ -161,17 +139,14 @@
         }
 
         #endregion
-
-        private Label label1;
         private Label label2;
         private Label label3;
         private Label label4;
-        private TextBox textBox1;
         private TextBox textBox2;
         private TextBox textBox3;
         private TextBox textBox4;
         private Button button1;
         private ErrorProvider errorProvider1;
-        private Button button2;
+        private Label label1;
     }
 }

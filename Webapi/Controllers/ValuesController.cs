@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.DataProtection.Repositories;
 
 using Microsoft.AspNetCore.SignalR;
 
-using Webapi.Hubs;
+
 
 
 //An API controller is a class that is responsible for handling requests at endpoints.
@@ -34,14 +34,14 @@ namespace Webapi.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly CCInterface ClientRepository;
-        private readonly IHubContext<SendOrders> _hubContext;
+        
 
         //dependency injection
-        public ValuesController(CCInterface ClientRepo, IHubContext<SendOrders> hubContext)
+        public ValuesController(CCInterface ClientRepo)
 
         {
             ClientRepository = ClientRepo;
-            _hubContext = hubContext;
+           
 
         }
 
@@ -86,8 +86,7 @@ namespace Webapi.Controllers
             var orderSender = new OrderSender();
             orderSender.SendOrder(NewClient);
 
-            // Notify all clients that a new order has been submitted
-            await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate");
+            
 
 
             return CreatedAtAction(nameof(GetClients), new { Clordid = NewClient.Clordid }, NewClient);

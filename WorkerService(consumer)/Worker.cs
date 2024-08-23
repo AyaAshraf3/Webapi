@@ -7,16 +7,22 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using WorkerService.Hubs;
+using Microsoft.AspNetCore.SignalR;
+
+
 
 namespace WorkerService_consumer_
 {
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        private readonly IHubContext<SendOrders> _hubContext;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger,IHubContext<SendOrders> hubContext)
         {
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -43,7 +49,7 @@ namespace WorkerService_consumer_
                                       routingKey: string.Empty);
 
                     var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (model, ea) =>
+                    consumer.Received += async (model, ea) =>
                     {
                         var body = ea.Body.ToArray();
                         var message = Encoding.UTF8.GetString(body);
@@ -51,7 +57,8 @@ namespace WorkerService_consumer_
 
                         _logger.LogInformation("Received Order: {0}", message);
 
-                        // Here you can do further processing, like saving to a database
+                        // Notify the SignalR clients about the new order
+                        await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", order);
                     };
 
                     channel.BasicConsume(queue: queueName,
@@ -74,11 +81,12 @@ namespace WorkerService_consumer_
         public class Submit
         {
             public Guid Clordid { get; set; }
-            public string Name { get; set; }
+            public string Username { get; set; }
             public int Qty { get; set; }
             public decimal Px { get; set; }
             public string Dir { get; set; }
         }
     }
 }
+
 

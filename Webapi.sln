@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{8BAE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerService(consumer)", "WorkerService(consumer)\WorkerService(consumer).csproj", "{6FF694ED-E9C1-4BA1-A8CC-40A532756CEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exchange(Consumer2)", "Exchange(Consumer2)\Exchange(Consumer2).csproj", "{88386716-8792-4630-A3F4-1C5310E4BE4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exchange(Consumer2)", "Exchange(Consumer2)\Exchange(Consumer2).csproj", "{88386716-8792-4630-A3F4-1C5310E4BE4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
