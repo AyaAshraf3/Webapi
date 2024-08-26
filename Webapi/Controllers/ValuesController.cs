@@ -34,14 +34,16 @@ namespace Webapi.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly Irepository ClientRepository;
-        
+        private readonly OrderSender _orderSender;
+
 
         //dependency injection
-        public ValuesController(Irepository ClientRepo)
+        public ValuesController(Irepository ClientRepo, OrderSender orderSender)
 
         {
             ClientRepository = ClientRepo;
-           
+            _orderSender = orderSender;
+
 
         }
 
@@ -82,9 +84,8 @@ namespace Webapi.Controllers
             Client.Clordid = Guid.NewGuid();
             var NewClient = await ClientRepository.Create(Client);
 
-            // Send the order to RabbitMQ
-            var orderSender = new OrderSender();
-            orderSender.SendOrder(NewClient);
+            // Use the injected _orderSender to send the order to RabbitMQ
+            _orderSender.SendOrder(NewClient);
 
 
             return CreatedAtAction(nameof(GetClients), new { Clordid = NewClient.Clordid }, NewClient);

@@ -20,7 +20,7 @@ namespace Webapi.Repository
 
 {
 
-    public class ClientConsumeAPIrpository : Irepository  //this interface(ccinterface) specifies the methods that need to be implemented to deal with DB.
+    public class ClientConsumeAPIrpository : Irepository  //this interface specifies the methods that need to be implemented to deal with DB.
 
     {
 
