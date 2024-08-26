@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WorkerService_consumer_.theModel
+namespace streamer.theModel
 {
     public class submitContent
     {

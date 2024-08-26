@@ -5,15 +5,15 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static UI.Form1;
+using static OMS.submitForm;
 
-namespace UI
+namespace OMS
 {
-    public partial class GridViewForm : Form
+    public partial class ordersGrid : Form
     {
         private HubConnection _hubConnection;
 
-        public GridViewForm()
+        public ordersGrid()
         {
             InitializeComponent();
             InitializeSignalR();
@@ -28,11 +28,11 @@ namespace UI
             await StartConnectionAsync();
 
             
-            _hubConnection.On<Submit>("ReceiveOrderUpdate", newOrder =>
+            _hubConnection.On<SubmissionData>("ReceiveOrderUpdate", newOrder =>
             {
                 dataGridView1.Invoke((Action)(() =>
                 {
-                    var dataSource = dataGridView1.DataSource as List<Submit>;
+                    var dataSource = dataGridView1.DataSource as List<SubmissionData>;
                     dataSource.Add(newOrder); // Add the new order
                     dataGridView1.DataSource = null; // Refresh the DataGridView
                     dataGridView1.DataSource = dataSource;
@@ -71,7 +71,7 @@ namespace UI
             try
             {
                 // Call the SignalR hub method to get the data
-                var orders = await _hubConnection.InvokeAsync<List<Submit>>("GetAllData");
+                var orders = await _hubConnection.InvokeAsync<List<SubmissionData>>("GetAllData");
 
                 // Use Task.Run to update the UI on the main thread
                 await Task.Run(() =>
@@ -100,14 +100,9 @@ namespace UI
             base.OnFormClosing(e);
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
-            Form1 orderform = new Form1();
+            submitForm orderform = new submitForm();
             orderform.Show();
         }
     }

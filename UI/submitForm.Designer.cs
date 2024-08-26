@@ -1,6 +1,6 @@
-﻿namespace UI
+﻿namespace OMS
 {
-    partial class Form1
+    partial class submitForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -32,12 +32,12 @@
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
-            textBox2 = new TextBox();
-            textBox3 = new TextBox();
-            textBox4 = new TextBox();
-            button1 = new Button();
+            btnSubmit = new Button();
             errorProvider1 = new ErrorProvider(components);
             label1 = new Label();
+            txtQuantity = new TextBox();
+            txtPrice = new TextBox();
+            txtDir = new TextBox();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             SuspendLayout();
             // 
@@ -49,7 +49,7 @@
             label2.Size = new Size(65, 20);
             label2.TabIndex = 1;
             label2.Text = "Quantity";
-            label2.Click += label2_Click;
+            
             // 
             // label3
             // 
@@ -69,39 +69,17 @@
             label4.TabIndex = 3;
             label4.Text = "Direction";
             // 
-            // textBox2
+            // btnSubmit
             // 
-            textBox2.Location = new Point(228, 81);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(330, 27);
-            textBox2.TabIndex = 6;
-            textBox2.TextChanged += textBox2_TextChanged;
-            // 
-            // textBox3
-            // 
-            textBox3.Location = new Point(228, 145);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(330, 27);
-            textBox3.TabIndex = 7;
-            textBox3.TextChanged += textBox3_TextChanged;
-            // 
-            // textBox4
-            // 
-            textBox4.Location = new Point(228, 205);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(330, 27);
-            textBox4.TabIndex = 8;
-            textBox4.TextChanged += textBox4_TextChanged;
-            // 
-            // button1
-            // 
-            button1.Location = new Point(572, 268);
-            button1.Name = "button1";
-            button1.Size = new Size(116, 45);
-            button1.TabIndex = 10;
-            button1.Text = "Submit";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            btnSubmit.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            btnSubmit.AutoSize = true;
+            btnSubmit.Location = new Point(558, 268);
+            btnSubmit.Name = "btnSubmit";
+            btnSubmit.Size = new Size(120, 49);
+            btnSubmit.TabIndex = 10;
+            btnSubmit.Text = "Submit";
+            btnSubmit.UseVisualStyleBackColor = true;
+            btnSubmit.Click += button1_Click;
             // 
             // errorProvider1
             // 
@@ -117,22 +95,42 @@
             label1.TabIndex = 11;
             label1.Text = "Enter the following information";
             // 
-            // Form1
+            // txtQuantity
+            // 
+            txtQuantity.Location = new Point(212, 88);
+            txtQuantity.Name = "txtQuantity";
+            txtQuantity.Size = new Size(330, 27);
+            txtQuantity.TabIndex = 12;
+            // 
+            // txtPrice
+            // 
+            txtPrice.Location = new Point(212, 145);
+            txtPrice.Name = "txtPrice";
+            txtPrice.Size = new Size(330, 27);
+            txtPrice.TabIndex = 13;
+            // 
+            // txtDir
+            // 
+            txtDir.Location = new Point(212, 205);
+            txtDir.Name = "txtDir";
+            txtDir.Size = new Size(330, 27);
+            txtDir.TabIndex = 14;
+            // 
+            // submitForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(749, 353);
+            Controls.Add(txtDir);
+            Controls.Add(txtPrice);
+            Controls.Add(txtQuantity);
             Controls.Add(label1);
-            Controls.Add(button1);
-            Controls.Add(textBox4);
-            Controls.Add(textBox3);
-            Controls.Add(textBox2);
+            Controls.Add(btnSubmit);
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
-            Name = "Form1";
+            Name = "submitForm";
             Text = "Order Form";
-            Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -142,11 +140,11 @@
         private Label label2;
         private Label label3;
         private Label label4;
-        private TextBox textBox2;
-        private TextBox textBox3;
-        private TextBox textBox4;
-        private Button button1;
+        private Button btnSubmit;
         private ErrorProvider errorProvider1;
         private Label label1;
+        private TextBox txtDir;
+        private TextBox txtPrice;
+        private TextBox txtQuantity;
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace UI
+﻿namespace OMS
 {
-    partial class Form2
+    partial class loginForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,25 +29,26 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            button1 = new Button();
+            btnLogin = new Button();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
-            textBox1 = new TextBox();
-            textBox2 = new TextBox();
+            txtUserName = new TextBox();
+            txtPass = new TextBox();
             errorProvider1 = new ErrorProvider(components);
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             SuspendLayout();
             // 
-            // button1
+            // btnLogin
             // 
-            button1.Location = new Point(522, 313);
-            button1.Name = "button1";
-            button1.Size = new Size(132, 50);
-            button1.TabIndex = 0;
-            button1.Text = "Login";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            btnLogin.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnLogin.Location = new Point(522, 313);
+            btnLogin.Name = "btnLogin";
+            btnLogin.Size = new Size(132, 50);
+            btnLogin.TabIndex = 0;
+            btnLogin.Text = "Login";
+            btnLogin.UseVisualStyleBackColor = true;
+            btnLogin.Click += button1_Click;
             // 
             // label1
             // 
@@ -58,7 +59,6 @@
             label1.Size = new Size(338, 28);
             label1.TabIndex = 1;
             label1.Text = "Enter the user name and password";
-            label1.Click += label1_Click;
             // 
             // label2
             // 
@@ -77,42 +77,40 @@
             label3.Size = new Size(70, 20);
             label3.TabIndex = 3;
             label3.Text = "Password";
-            label3.Click += label3_Click;
             // 
-            // textBox1
+            // txtUserName
             // 
-            textBox1.Location = new Point(211, 138);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(379, 27);
-            textBox1.TabIndex = 4;
-            textBox1.TextChanged += textBox1_TextChanged;
+            txtUserName.Location = new Point(211, 138);
+            txtUserName.Name = "txtUserName";
+            txtUserName.Size = new Size(379, 27);
+            txtUserName.TabIndex = 4;
+            txtUserName.TextChanged += textBox1_TextChanged;
             // 
-            // textBox2
+            // txtPass
             // 
-            textBox2.Location = new Point(211, 229);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(379, 27);
-            textBox2.TabIndex = 5;
-            textBox2.TextChanged += textBox2_TextChanged;
+            txtPass.Location = new Point(211, 229);
+            txtPass.Name = "txtPass";
+            txtPass.Size = new Size(379, 27);
+            txtPass.TabIndex = 5;
+            txtPass.TextChanged += textBox2_TextChanged;
             // 
             // errorProvider1
             // 
             errorProvider1.ContainerControl = this;
             // 
-            // Form2
+            // loginForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(750, 406);
-            Controls.Add(textBox2);
-            Controls.Add(textBox1);
+            Controls.Add(txtPass);
+            Controls.Add(txtUserName);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(button1);
-            Name = "Form2";
+            Controls.Add(btnLogin);
+            Name = "loginForm";
             Text = "Login Form";
-            Load += Form2_Load;
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -120,12 +118,12 @@
 
         #endregion
 
-        private Button button1;
+        private Button btnLogin;
         private Label label1;
         private Label label2;
         private Label label3;
-        private TextBox textBox1;
-        private TextBox textBox2;
+        private TextBox txtUserName;
+        private TextBox txtPass;
         private ErrorProvider errorProvider1;
     }
 }

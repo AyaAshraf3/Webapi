@@ -5,11 +5,11 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Webapi", "Webapi\Webapi.csproj", "{DCBDFD1C-78BB-4DBB-B471-7181A11AF378}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{8BAE739D-9D2B-4F9E-96EF-B1739FEF9865}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OMS", "UI\OMS.csproj", "{8BAE739D-9D2B-4F9E-96EF-B1739FEF9865}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerService(consumer)", "WorkerService(consumer)\WorkerService(consumer).csproj", "{6FF694ED-E9C1-4BA1-A8CC-40A532756CEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "streamer", "WorkerService(consumer)\streamer.csproj", "{6FF694ED-E9C1-4BA1-A8CC-40A532756CEA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exchange(Consumer2)", "Exchange(Consumer2)\Exchange(Consumer2).csproj", "{88386716-8792-4630-A3F4-1C5310E4BE4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exchange", "Exchange(Consumer2)\Exchange.csproj", "{88386716-8792-4630-A3F4-1C5310E4BE4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

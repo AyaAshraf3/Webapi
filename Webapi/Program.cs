@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Webapi.ClientConsume;
+using Webapi.theModel;
 using Webapi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +20,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 // Add services to the container.
-builder.Services.AddScoped<CCInterface, ClientConsumeAPIrpository>();
+builder.Services.AddScoped<Irepository, ClientConsumeAPIrpository>();
 
 // This configures the context to use SQLite as the database provider, with the database file named ClientConsume.db.
 builder.Services.AddDbContext<APIcontext>(o => o.UseSqlite("Data source=ClientConsume.db"));
@@ -46,6 +46,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 
 

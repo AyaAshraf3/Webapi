@@ -7,19 +7,19 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using WorkerService.Hubs;
+using streamer.Hubs;
 using Microsoft.AspNetCore.SignalR;
 
 
 
-namespace WorkerService_consumer_
+namespace streamer
 {
-    public class Worker : BackgroundService
+    public partial class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IHubContext<SendOrders> _hubContext;
+        private readonly IHubContext<streamer.Hubs.StreamingHub> _hubContext;
 
-        public Worker(ILogger<Worker> logger,IHubContext<SendOrders> hubContext)
+        public Worker(ILogger<Worker> logger,IHubContext<streamer.Hubs.StreamingHub> hubContext)
         {
             _logger = logger;
             _hubContext = hubContext;
@@ -53,7 +53,7 @@ namespace WorkerService_consumer_
                     {
                         var body = ea.Body.ToArray();
                         var message = Encoding.UTF8.GetString(body);
-                        var order = JsonSerializer.Deserialize<Submit>(message);
+                        var order = JsonSerializer.Deserialize<SubmitDTO>(message);
 
                         _logger.LogInformation("Received Order: {0}", message);
 
@@ -76,15 +76,6 @@ namespace WorkerService_consumer_
 
                 await Task.Delay(1000, stoppingToken);
             }
-        }
-
-        public class Submit
-        {
-            public Guid Clordid { get; set; }
-            public string Username { get; set; }
-            public int Qty { get; set; }
-            public decimal Px { get; set; }
-            public string Dir { get; set; }
         }
     }
 }

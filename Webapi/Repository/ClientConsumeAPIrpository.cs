@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.DataProtection.Repositories;
 
-using Webapi.ClientConsume;
+using Webapi.theModel;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +20,7 @@ namespace Webapi.Repository
 
 {
 
-    public class ClientConsumeAPIrpository : CCInterface  //this interface(ccinterface) specifies the methods that need to be implemented to deal with DB.
+    public class ClientConsumeAPIrpository : Irepository  //this interface(ccinterface) specifies the methods that need to be implemented to deal with DB.
 
     {
 
@@ -35,7 +35,7 @@ namespace Webapi.Repository
             _logger = logger;
         }
 
-        public async Task<ClientConsumeAPI> Create(ClientConsumeAPI client)
+        public async Task<webapiDTO> Create(webapiDTO client)
 
         {
 
@@ -70,7 +70,7 @@ namespace Webapi.Repository
 
         }
 
-        public async Task<IEnumerable<ClientConsumeAPI>> Get()
+        public async Task<IEnumerable<webapiDTO>> Get()
 
         {
             _logger.LogInformation("Getting All the orders saved in the DB!!");
@@ -81,7 +81,7 @@ namespace Webapi.Repository
 
         }
 
-        public async Task<ClientConsumeAPI> Get(Guid Clordid)
+        public async Task<webapiDTO> Get(Guid Clordid)
 
         {
             _logger.LogInformation("Trying to find the requested order!!");
@@ -91,7 +91,7 @@ namespace Webapi.Repository
 
         }
 
-        public async Task Update(ClientConsumeAPI Client)
+        public async Task Update(webapiDTO Client)
 
         {
 

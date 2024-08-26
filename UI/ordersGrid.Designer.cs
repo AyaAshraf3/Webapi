@@ -1,6 +1,6 @@
-﻿namespace UI
+﻿namespace OMS
 {
-    partial class GridViewForm
+    partial class ordersGrid
     {
         /// <summary>
         /// Required designer variable.
@@ -41,7 +41,7 @@
             dataGridView1.RowHeadersWidth = 51;
             dataGridView1.Size = new Size(732, 350);
             dataGridView1.TabIndex = 0;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            
             // 
             // button1
             // 

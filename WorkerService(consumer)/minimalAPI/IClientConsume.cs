@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WorkerService_consumer_.theModel;
+using streamer.theModel;
 
-namespace WorkerService_consumer_.minimalAPI
+namespace streamer.minimalAPI
 {
     public interface IClientConsume
     {

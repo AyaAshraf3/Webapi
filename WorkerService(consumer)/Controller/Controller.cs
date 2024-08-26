@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq; // Import the LINQ namespace
 using System.Threading.Tasks;
-using WorkerService_consumer_.minimalAPI;
-using WorkerService_consumer_.theModel;
+using streamer.minimalAPI;
+using streamer.theModel;
 
-namespace WorkerService_consumer_.Controller
+namespace streamer.Controller
 {
     [Route("api/[controller]")]
     [ApiController]

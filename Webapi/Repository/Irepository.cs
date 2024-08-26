@@ -1,5 +1,5 @@
 ﻿
-using Webapi.ClientConsume;
+using Webapi.theModel;
 
 using System;
 
@@ -15,19 +15,19 @@ using System.Threading.Tasks;
 
 namespace Webapi.Repository
 {
-    public interface CCInterface
+    public interface Irepository
     {
         //This will retrieve all Clients consume's entries
-        Task<IEnumerable<ClientConsumeAPI>> Get();
+        Task<IEnumerable<webapiDTO>> Get();
 
         //This will retrieve a particular Client entry.
-        Task<ClientConsumeAPI> Get(Guid Clordid);
+        Task<webapiDTO> Get(Guid Clordid);
 
         //This will create a client entry
-        Task<ClientConsumeAPI> Create(ClientConsumeAPI ClientConsume);
+        Task<webapiDTO> Create(webapiDTO ClientConsume);
 
         //This will update a client entry
-        Task Update(ClientConsumeAPI ClientConsume);
+        Task Update(webapiDTO ClientConsume);
 
         //This will delete a client entry
         Task Delete(Guid Clordid);

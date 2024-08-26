@@ -2,13 +2,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using WorkerService_consumer_;
+using streamer;
 using Microsoft.AspNetCore.Builder;
-using WorkerService.Hubs;
+using streamer.Hubs;
 using Microsoft.EntityFrameworkCore.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using WorkerService_consumer_.minimalAPI;
-using WorkerService_consumer_.theModel;
+using streamer.minimalAPI;
+using streamer.theModel;
 using Microsoft.OpenApi.Models;
 
 IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args)
@@ -56,7 +56,7 @@ IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args)
             app.UseEndpoints(endpoints =>
             {
                 // Map the SignalR Hub endpoint
-                endpoints.MapHub<SendOrders>("/orderHub");
+                endpoints.MapHub<StreamingHub>("/orderHub");
 
                 // Map the API controllers
                 endpoints.MapControllers();

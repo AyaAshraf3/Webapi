@@ -5,9 +5,9 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace Webapi.ClientConsume
+namespace Webapi.theModel
 {
-    public class ClientConsumeAPI
+    public class webapiDTO
     {
         [Key]
         public Guid Clordid { get; set; }

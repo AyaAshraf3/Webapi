@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Webapi.ClientConsume;
+using Webapi.theModel;
 
 public class OrderSender
 {
-    public void SendOrder(ClientConsumeAPI order)
+    public void SendOrder(webapiDTO order)
     {
         var factory = new ConnectionFactory() 
         {

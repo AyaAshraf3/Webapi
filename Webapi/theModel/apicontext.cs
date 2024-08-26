@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 //setting up an Entity Framework Core (EF Core) DbContext in a .NET application to interact with DB
 
-namespace Webapi.ClientConsume
+namespace Webapi.theModel
 {
 
     public class APIcontext : DbContext //inherits from DbContext, a core class in EF Core that manages database connections
@@ -38,7 +38,7 @@ namespace Webapi.ClientConsume
         }
 
         //DbSet<T> is a way of working with entities in the database. In this case, ClientConsume will map to a table in the database where each row corresponds to an ClientConsumeAPI object.
-        public DbSet<ClientConsumeAPI> ClientConsume { get; set; } 
+        public DbSet<webapiDTO> ClientConsume { get; set; } 
     }
 }
 

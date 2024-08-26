@@ -1,4 +1,4 @@
-﻿using Webapi.ClientConsume;
+﻿using Webapi.theModel;
 
 using Webapi.Repository;
 
@@ -33,11 +33,11 @@ namespace Webapi.Controllers
 
     public class ValuesController : ControllerBase
     {
-        private readonly CCInterface ClientRepository;
+        private readonly Irepository ClientRepository;
         
 
         //dependency injection
-        public ValuesController(CCInterface ClientRepo)
+        public ValuesController(Irepository ClientRepo)
 
         {
             ClientRepository = ClientRepo;
@@ -51,7 +51,7 @@ namespace Webapi.Controllers
 
         [HttpGet]
 
-        public async Task<IEnumerable<ClientConsumeAPI>> GetClients()
+        public async Task<IEnumerable<webapiDTO>> GetClients()
 
         {
 
@@ -61,7 +61,7 @@ namespace Webapi.Controllers
 
         [HttpGet("{Clordid}")]
 
-        public async Task<ActionResult<ClientConsumeAPI>> GetClient(Guid Clordid)
+        public async Task<ActionResult<webapiDTO>> GetClient(Guid Clordid)
 
         {
             
@@ -76,7 +76,7 @@ namespace Webapi.Controllers
 
         [HttpPost]
 
-        public async Task<ActionResult<ClientConsumeAPI>> PostClients([FromBody] ClientConsumeAPI Client)
+        public async Task<ActionResult<webapiDTO>> PostClients([FromBody] webapiDTO Client)
 
         {
             Client.Clordid = Guid.NewGuid();
@@ -85,8 +85,6 @@ namespace Webapi.Controllers
             // Send the order to RabbitMQ
             var orderSender = new OrderSender();
             orderSender.SendOrder(NewClient);
-
-            
 
 
             return CreatedAtAction(nameof(GetClients), new { Clordid = NewClient.Clordid }, NewClient);
@@ -99,7 +97,7 @@ namespace Webapi.Controllers
 
         [HttpPut]
 
-        public async Task<ActionResult> PutClient(Guid Clordid, [FromBody] ClientConsumeAPI Client)
+        public async Task<ActionResult> PutClient(Guid Clordid, [FromBody] webapiDTO Client)
 
         {
             

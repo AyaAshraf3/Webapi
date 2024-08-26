@@ -8,48 +8,43 @@ using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Exchange_Consumer2_
+
+namespace Exchange
 {
-    public class Worker : BackgroundService
+    public partial class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
         private IConnection _connection;
         private IModel _channel;
+        private readonly string _hostName;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, string hostName)
         {
+
             _logger = logger;
+            _hostName = hostName;
             InitializeRabbitMQListener(); // Initialize RabbitMQ on startup
+            
         }
 
         //This method is called in the constructor to ensure the RabbitMQ listener is set up as soon as the service starts.
         private void InitializeRabbitMQListener()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = _hostName };
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
 
-            _channel.ExchangeDeclare(exchange: "Order_logs", type: ExchangeType.Fanout);
-
-            _channel.QueueDeclare(
-                                 queue: "queue2",           // Leave the queue name empty to let RabbitMQ generate a unique name, or specify your own name.
-                                 durable: true,      // Set to true if you want the queue to survive a broker restart.
-                                 exclusive: false,    // Set to true if the queue is only used by one connection and will be deleted when that connection closes.
-                                 autoDelete: false,   // Set to false to prevent the queue from being automatically deleted when the last consumer unsubscribes.
-                                 arguments: null      // Additional optional arguments, can usually be null.
-                             );
-
-            _channel.QueueBind(queue: "queue2",
-                               exchange: "Order_logs",
-                               routingKey: string.Empty);
+            exchangedeclare();
+            queuedeclare();
+            queueBind();
 
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                var order = JsonSerializer.Deserialize<Submit>(message);
+                var order = JsonSerializer.Deserialize<SubmitDTO>(message);
 
                 _logger.LogInformation("Received Order: {0}", message);
 
@@ -61,6 +56,29 @@ namespace Exchange_Consumer2_
                                  consumer: consumer);
 
             _logger.LogInformation("RabbitMQ listener initialized. Waiting for messages...");
+        }
+
+        private void exchangedeclare()
+        {
+            _channel.ExchangeDeclare(exchange: "Order_logs", type: ExchangeType.Fanout);
+        }
+
+        private void queueBind()
+        {
+            _channel.QueueBind(queue: "queue2",
+                               exchange: "Order_logs",
+                               routingKey: string.Empty);
+        }
+
+        private void queuedeclare()
+        {
+            _channel.QueueDeclare(
+                                 queue: "queue2",           // Leave the queue name empty to let RabbitMQ generate a unique name, or specify your own name.
+                                 durable: true,      // Set to true if you want the queue to survive a broker restart.
+                                 exclusive: false,    // Set to true if the queue is only used by one connection and will be deleted when that connection closes.
+                                 autoDelete: false,   // Set to false to prevent the queue from being automatically deleted when the last consumer unsubscribes.
+                                 arguments: null      // Additional optional arguments, can usually be null.
+                             );
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -78,15 +96,6 @@ namespace Exchange_Consumer2_
             _channel.Close();
             _connection.Close();
             base.Dispose();
-        }
-
-        public class Submit
-        {
-            public Guid Clordid { get; set; }
-            public string Username { get; set; }
-            public int Qty { get; set; }
-            public decimal Px { get; set; }
-            public string Dir { get; set; }
         }
     }
 }

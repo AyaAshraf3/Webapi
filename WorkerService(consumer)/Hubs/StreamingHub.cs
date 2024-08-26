@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using WorkerService_consumer_.minimalAPI;
-using WorkerService_consumer_.theModel;
+using streamer.minimalAPI;
+using streamer.theModel;
 
-namespace WorkerService.Hubs
+namespace streamer.Hubs
 {
-    public class SendOrders : Hub
+    public class StreamingHub : Hub
     {
         private readonly IClientConsume _clientRepository;
 
-        public SendOrders(IClientConsume clientRepository)
+        public StreamingHub(IClientConsume clientRepository)
         {
             _clientRepository = clientRepository;
         }
