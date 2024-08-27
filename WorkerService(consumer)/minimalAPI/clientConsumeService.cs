@@ -13,12 +13,15 @@ namespace streamer.minimalAPI
     {
         private readonly ILogger<clientConsumeService> _logger;
         private readonly IDistributedCache _distributedCache;
-        private const string RedisCacheKey = "ClientConsumesCacheKey";
+        private readonly IConfiguration _configuration;
+        private readonly string RedisCacheKey;
 
-        public clientConsumeService(ILogger<clientConsumeService> logger, IDistributedCache distributedCache)
+        public clientConsumeService(ILogger<clientConsumeService> logger, IDistributedCache distributedCache, IConfiguration configuration)
         {
             _logger = logger;
             _distributedCache = distributedCache;
+            _configuration = configuration;
+            RedisCacheKey = configuration["Redis:CacheKey"];
         }
 
         public async Task<IEnumerable<submitContent>> GetAllClientConsumesAsync()

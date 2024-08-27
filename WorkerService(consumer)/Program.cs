@@ -10,12 +10,23 @@ using Microsoft.EntityFrameworkCore;
 using streamer.minimalAPI;
 using streamer.theModel;
 using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Configuration;
 
 IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args)
     .ConfigureWebHostDefaults(webBuilder =>
     {
+
+        webBuilder.ConfigureAppConfiguration((context, config) =>
+          {
+              // Load the configuration from appsettings.json
+              config.SetBasePath(Directory.GetCurrentDirectory());
+              config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+          });
+        
         webBuilder.ConfigureServices((context, services) =>
         {
+            var configuration = context.Configuration;
+
             // Add your worker service
             services.AddHostedService<Worker>();
 
@@ -25,17 +36,13 @@ IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args)
             // Add your repository or other services
             services.AddScoped<IClientConsume, clientConsumeService>();
 
-            // the URL needs to be configured!!!
-            //services.AddDbContext<minimalApiDb>(o => o.UseSqlite("Data source=C:\\Users\\DELL\\source\\repos\\Webapi\\Webapi\\ClientConsume.db"));
 
             // Register IDistributedCache with Redis implementation
             services.AddDistributedRedisCache(
                options =>
                {
-                   options.Configuration = "127.0.0.1:6379,abortConnect=false";
+                   options.Configuration = configuration.GetSection("Redis")["ConnectionString"];
                });
-
-
 
             // Add Controllers
             services.AddControllers();
@@ -49,6 +56,7 @@ IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args)
 
         webBuilder.Configure((context, app) =>
         {
+            var configuration = context.Configuration;
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -65,7 +73,7 @@ IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args)
             app.UseEndpoints(endpoints =>
             {
                 // Map the SignalR Hub endpoint
-                endpoints.MapHub<StreamingHub>("/orderHub");
+                endpoints.MapHub<StreamingHub>(configuration["AppSettings:SignalrEndpoint"]);
 
                 // Map the API controllers
                 endpoints.MapControllers();

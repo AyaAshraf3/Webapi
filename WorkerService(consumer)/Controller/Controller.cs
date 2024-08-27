@@ -17,12 +17,15 @@ namespace streamer.Controller
     {
         private readonly IDistributedCache _distributedCache;
         private readonly ILogger<ClientConsumeController> _logger;
-        private const string RedisCacheKey = "ClientConsumesCacheKey";
+        private readonly IConfiguration _configuration;
+        private readonly string RedisCacheKey;
 
-        public ClientConsumeController(IDistributedCache distributedCache, ILogger<ClientConsumeController> logger)
+        public ClientConsumeController(IDistributedCache distributedCache, ILogger<ClientConsumeController> logger, IConfiguration configuration)
         {
             _distributedCache = distributedCache;
             _logger = logger;
+            _configuration = configuration;
+            RedisCacheKey = configuration["Redis:CacheKey"];
         }
 
         [HttpGet]

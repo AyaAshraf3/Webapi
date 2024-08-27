@@ -1,15 +1,8 @@
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
 using System.Text;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using streamer.Hubs;
-using streamer.theModel;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR;
 
@@ -21,20 +14,27 @@ namespace streamer
         private readonly ILogger<Worker> _logger;
         private readonly IHubContext<StreamingHub> _hubContext;
         private readonly IDistributedCache _distributedCache;
-        private const string RedisCacheKey = "ClientConsumesCacheKey";
+        private readonly IConfiguration _configuration;
+        private readonly string RedisCacheKey;
 
-        public Worker(ILogger<Worker> logger, IHubContext<StreamingHub> hubContext, IDistributedCache distributedCache)
+        public Worker(ILogger<Worker> logger, IHubContext<StreamingHub> hubContext, IDistributedCache distributedCache, IConfiguration configuration)
         {
             _logger = logger;
             _hubContext = hubContext;
             _distributedCache = distributedCache;
+            _configuration = configuration;
+            RedisCacheKey = configuration["Redis:CacheKey"];
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            
+            var redisConnectionString = _configuration["Redis:ConnectionString"];
+            _logger.LogInformation("Redis Connection String: {0}", redisConnectionString);
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                var factory = new ConnectionFactory() { HostName = "localhost" };
+                var factory = new ConnectionFactory() { HostName = _configuration["AppSettings:Hostname"] };
 
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
@@ -77,8 +77,8 @@ namespace streamer
                         var serializedData = JsonConvert.SerializeObject(clientConsumes);
                         var encodedData = Encoding.UTF8.GetBytes(serializedData);
 
-                        var cacheEntryOptions = new DistributedCacheEntryOptions()
-                            .SetSlidingExpiration(TimeSpan.FromMinutes(20));
+                        var cacheEntryOptions = new DistributedCacheEntryOptions();
+                           
 
                         await _distributedCache.SetAsync(RedisCacheKey, encodedData, cacheEntryOptions);
                         _logger.LogInformation("Order successfully added to Redis cache.");
