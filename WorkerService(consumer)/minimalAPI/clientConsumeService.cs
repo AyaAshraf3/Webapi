@@ -1,37 +1,43 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using streamer.theModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using   streamer.theModel;
-
 
 namespace streamer.minimalAPI
 {
     public class clientConsumeService : IClientConsume
     {
-        private readonly minimalApiDb context_instance;
         private readonly ILogger<clientConsumeService> _logger;
+        private readonly IDistributedCache _distributedCache;
+        private const string RedisCacheKey = "ClientConsumesCacheKey";
 
-        public clientConsumeService(minimalApiDb clientRepository, ILogger<clientConsumeService> logger)
+        public clientConsumeService(ILogger<clientConsumeService> logger, IDistributedCache distributedCache)
         {
-            context_instance = clientRepository;
             _logger = logger;
+            _distributedCache = distributedCache;
         }
-
 
         public async Task<IEnumerable<submitContent>> GetAllClientConsumesAsync()
-
         {
-            _logger.LogInformation("Getting All the orders saved in the DB by the streamer!!");
+            _logger.LogInformation("Getting all client consumes from Redis cache.");
 
-            //we are using ToListAsync method of dbset to show all entry
-            return await context_instance.ClientConsume.ToListAsync();
+            var cachedData = await _distributedCache.GetAsync(RedisCacheKey);
 
-
+            if (cachedData != null)
+            {
+                _logger.LogInformation("Data successfully retrieved from Redis cache.");
+                var serializedData = Encoding.UTF8.GetString(cachedData);
+                return JsonConvert.DeserializeObject<List<submitContent>>(serializedData);
+            }
+            else
+            {
+                _logger.LogWarning("No data found in Redis cache.");
+                return new List<submitContent>(); // Return an empty list or handle the case as needed
+            }
         }
-
-        
     }
 }

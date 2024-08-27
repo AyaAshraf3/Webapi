@@ -26,7 +26,16 @@ IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args)
             services.AddScoped<IClientConsume, clientConsumeService>();
 
             // the URL needs to be configured!!!
-            services.AddDbContext<minimalApiDb>(o => o.UseSqlite("Data source=C:\\Users\\DELL\\source\\repos\\Webapi\\Webapi\\ClientConsume.db"));
+            //services.AddDbContext<minimalApiDb>(o => o.UseSqlite("Data source=C:\\Users\\DELL\\source\\repos\\Webapi\\Webapi\\ClientConsume.db"));
+
+            // Register IDistributedCache with Redis implementation
+            services.AddDistributedRedisCache(
+               options =>
+               {
+                   options.Configuration = "127.0.0.1:6379,abortConnect=false";
+               });
+
+
 
             // Add Controllers
             services.AddControllers();

@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using streamer.theModel;
 using System;
 using System.Collections.Generic;
-using System.Linq; // Import the LINQ namespace
+using System.Text;
 using System.Threading.Tasks;
-using streamer.minimalAPI;
-using streamer.theModel;
 
 namespace streamer.Controller
 {
@@ -13,11 +15,14 @@ namespace streamer.Controller
     [ApiController]
     public class ClientConsumeController : ControllerBase
     {
-        private readonly IClientConsume _clientConsumeService;
+        private readonly IDistributedCache _distributedCache;
+        private readonly ILogger<ClientConsumeController> _logger;
+        private const string RedisCacheKey = "ClientConsumesCacheKey";
 
-        public ClientConsumeController(IClientConsume clientConsumeService)
+        public ClientConsumeController(IDistributedCache distributedCache, ILogger<ClientConsumeController> logger)
         {
-            _clientConsumeService = clientConsumeService;
+            _distributedCache = distributedCache;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -25,21 +30,31 @@ namespace streamer.Controller
         {
             try
             {
-                var clientConsumes = await _clientConsumeService.GetAllClientConsumesAsync();
+                _logger.LogInformation("Attempting to retrieve data from Redis cache.");
 
-                if (clientConsumes == null || !clientConsumes.Any()) // Use Any() to check for empty collection
+                // Check if the data is in the cache
+                var cachedData = await _distributedCache.GetAsync(RedisCacheKey);
+
+                if (cachedData != null)
                 {
-                    // If no data is found, return a 404 Not Found status
-                    return NotFound("No client consumes found in the database.");
-                }
+                    _logger.LogInformation("Data successfully retrieved from Redis cache.");
 
-                // If data is found, return it with a 200 OK status
-                return Ok(clientConsumes);
+                    // Data found in cache
+                    var serializedData = Encoding.UTF8.GetString(cachedData);
+                    var clientConsumes = JsonConvert.DeserializeObject<List<submitContent>>(serializedData);
+                    return Ok(clientConsumes);
+                }
+                else
+                {
+                    _logger.LogWarning("No data found in Redis cache.");
+                    // Data not found in cache
+                    return NotFound("No client consumes found in cache.");
+                }
             }
             catch (Exception ex)
             {
-                // Log the exception (you might want to use a logging framework like Serilog or NLog here)
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving data from the database: {ex.Message}");
+                _logger.LogError(ex, "Error occurred while retrieving data from Redis cache.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving data: {ex.Message}");
             }
         }
     }

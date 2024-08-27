@@ -1,15 +1,17 @@
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using streamer.Hubs;
+using streamer.theModel;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.SignalR;
-
 
 
 namespace streamer
@@ -17,12 +19,15 @@ namespace streamer
     public partial class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly IHubContext<streamer.Hubs.StreamingHub> _hubContext;
+        private readonly IHubContext<StreamingHub> _hubContext;
+        private readonly IDistributedCache _distributedCache;
+        private const string RedisCacheKey = "ClientConsumesCacheKey";
 
-        public Worker(ILogger<Worker> logger,IHubContext<streamer.Hubs.StreamingHub> hubContext)
+        public Worker(ILogger<Worker> logger, IHubContext<StreamingHub> hubContext, IDistributedCache distributedCache)
         {
             _logger = logger;
             _hubContext = hubContext;
+            _distributedCache = distributedCache;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -37,33 +42,52 @@ namespace streamer
                     channel.ExchangeDeclare(exchange: "Order_logs", type: ExchangeType.Fanout);
 
                     var queueName = channel.QueueDeclare(
-                                                         queue: "queue1",           // Leave the queue name empty to let RabbitMQ generate a unique name, or specify your own name.
-                                                         durable: true,      // Set to true if you want the queue to survive a broker restart.
-                                                         exclusive: false,    // Set to true if the queue is only used by one connection and will be deleted when that connection closes.
-                                                         autoDelete: false,   // Set to false to prevent the queue from being automatically deleted when the last consumer unsubscribes.
-                                                         arguments: null      // Additional optional arguments, can usually be null.
-                                                     ).QueueName;
+                        queue: "queue1",
+                        durable: true,
+                        exclusive: false,
+                        autoDelete: false,
+                        arguments: null
+                    ).QueueName;
 
                     channel.QueueBind(queue: queueName,
-                                      exchange: "Order_logs",
-                                      routingKey: string.Empty);
+                        exchange: "Order_logs",
+                        routingKey: string.Empty);
 
                     var consumer = new EventingBasicConsumer(channel);
                     consumer.Received += async (model, ea) =>
                     {
                         var body = ea.Body.ToArray();
                         var message = Encoding.UTF8.GetString(body);
-                        var order = JsonSerializer.Deserialize<SubmitDTO>(message);
+                        var order = System.Text.Json.JsonSerializer.Deserialize<SubmitDTO>(message);
 
+                        // Inside the consumer.Received event handler
                         _logger.LogInformation("Received Order: {0}", message);
 
                         // Notify the SignalR clients about the new order
                         await _hubContext.Clients.All.SendAsync("ReceiveOrderUpdate", order);
+
+                        // Add the order to Redis cache
+                        _logger.LogInformation("Adding received order to Redis cache.");
+                        var cachedData = await _distributedCache.GetAsync(RedisCacheKey);
+                        var clientConsumes = cachedData != null
+                            ? JsonConvert.DeserializeObject<List<SubmitDTO>>(Encoding.UTF8.GetString(cachedData))
+                            : new List<SubmitDTO>();
+
+                        clientConsumes.Add(order);
+                        var serializedData = JsonConvert.SerializeObject(clientConsumes);
+                        var encodedData = Encoding.UTF8.GetBytes(serializedData);
+
+                        var cacheEntryOptions = new DistributedCacheEntryOptions()
+                            .SetSlidingExpiration(TimeSpan.FromMinutes(20));
+
+                        await _distributedCache.SetAsync(RedisCacheKey, encodedData, cacheEntryOptions);
+                        _logger.LogInformation("Order successfully added to Redis cache.");
+
                     };
 
                     channel.BasicConsume(queue: queueName,
-                                         autoAck: true,
-                                         consumer: consumer);
+                        autoAck: true,
+                        consumer: consumer);
 
                     _logger.LogInformation("Listening for messages...");
 
@@ -79,5 +103,3 @@ namespace streamer
         }
     }
 }
-
-
